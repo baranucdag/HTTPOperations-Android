@@ -28,23 +28,32 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Button button;
+    private Button getButton;
+    private Button postButton;
 
     ArrayList<userModel> userList = new ArrayList<>();
     userModel user = new userModel(1,0,"newalbum","newtitle","newurl");
-    String url = "https://jsonplaceholder.typicode.com/photos";
+    String url = "https://jsonplaceholder.typicode.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.button_send_request);
-        button.setOnClickListener(new View.OnClickListener() {
+        getButton = findViewById(R.id.button_send_getRequest);
+        postButton = findViewById(R.id.button_send_postRequest);
+        getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 sendGetRequest();
+            }
+        });
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendPostRequest();
             }
         });
     }
@@ -53,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
-         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+         StringRequest stringRequest = new StringRequest(Request.Method.GET, url+"photos",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -91,10 +100,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("Author", "BNK");
+            jsonBody.put("title", "baran");
+            jsonBody.put("body", "ucdag");
+            jsonBody.put("userId", 1);
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url+"/add", new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url+"posts", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.i("VOLLEY", response);
@@ -136,3 +147,59 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+/*
+  private static final String TAG = "MainActivity";
+    private static final String BASE_URL = "https://api.example.com/";
+
+    private HttpClientExample httpClient;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        httpClient = new HttpClientExample(Volley.newRequestQueue(this));
+
+        // GET isteği örneği
+        String getEndpoint = BASE_URL + "photos";
+        httpClient.sendGetRequest(getEndpoint, new HttpClientExample.VolleyCallback() {
+            @Override
+            public void onSuccess(String response) {
+                // Yanıt alındığında burada işlemleri gerçekleştirin
+                Log.d(TAG, "GET Response: " + response);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                // İstek başarısız olduğunda burada hata işleme yapabilirsiniz
+                Log.e(TAG, "GET Error: " + error.toString());
+            }
+        });
+
+        // POST isteği örneği
+        String postEndpoint = BASE_URL + "posts";
+        JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("title", "baran");
+            requestBody.put("body", "ucdag");
+            requestBody.put("userId", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        httpClient.sendPostRequest(postEndpoint, requestBody, new HttpClientExample.VolleyCallback() {
+            @Override
+            public void onSuccess(String response) {
+                // Yanıt alındığında burada işlemleri gerçekleştirin
+                Log.d(TAG, "POST Response: " + response);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                // İstek başarısız olduğunda burada hata işleme yapabilirsiniz
+                Log.e(TAG, "POST Error: " + error.toString());
+            }
+        });
+ */
